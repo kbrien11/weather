@@ -61,7 +61,7 @@ def raining(city):
     if data == description:
       solution.append(city_name)
       solution.append(str(wind) + " " + "mph")
-      solution.append(str(temp) + " " + "f")
+      solution.append(str(temp) + " " + "F")
       solution.append(about)
       return solution
   except KeyError:
@@ -91,3 +91,23 @@ def clearSky(city):
 
 
 
+def snow(city):
+  try:
+    solution = []
+    data = "Snow"
+    quote_endpoint ="http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=27b3ec19c7d34c1bcca082098b7a60a7"
+    response = requests.get(quote_endpoint.format(city))
+    res = response.json()
+    city_name = res['name']
+    wind = res['wind']['speed']
+    temp = round(res['main']['temp'])
+    description = res['weather'][0]['main']
+    about = res['weather'][0]['description']
+    if data == description:
+      solution.append(city_name)
+      solution.append(str(wind) + " " + "mph")
+      solution.append(str(temp) + " " + "f")
+      solution.append(about)
+      return solution
+  except KeyError:
+    print(KeyError)

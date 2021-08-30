@@ -2,7 +2,7 @@ from flask import Flask,jsonify
 import sqlite3
 import os
 import requests
-from util import cloud,thunderstorms,raining,clearSky
+from util import cloud,thunderstorms,raining,clearSky,snow
 from flask_cors import CORS
 from app import Location
 
@@ -23,7 +23,7 @@ def thuderstorm_data(condition):
                 if data:
                      datas.append(data)
             return jsonify({"location": datas})
-        elif condition =="Clouds" or condition =="clouds" or condition == "cloudy":
+        elif condition =="Clouds" or condition =="clouds" or condition == "cloudy" or condition =="Cloudy":
             datas = []
             for city in output:
                 api_city = city[1]
@@ -46,6 +46,15 @@ def thuderstorm_data(condition):
             for city in output:
                 api_city = city[1]
                 data = clearSky(api_city)
+                if data:
+                    datas.append(data)
+            return jsonify({"location":datas})
+
+        elif condition =="Snow" or condition =="snow":
+            datas= []
+            for city in output:
+                api_city = city[1]
+                data = snow(api_city)
                 if data:
                     datas.append(data)
             return jsonify({"location":datas})

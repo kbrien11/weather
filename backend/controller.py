@@ -1,10 +1,8 @@
 from flask import Flask,jsonify
-import sqlite3
-import os
-import requests
-from util import cloud,thunderstorms,raining,clearSky,snow
+from util import get_open_weather
 from flask_cors import CORS
 from app import Location
+from re import search
 
 
 
@@ -12,56 +10,31 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/api/<condition>/', methods=['GET'])
-def thuderstorm_data(condition):
-        output = Location.get_location_data()
-        if condition =="Thunderstorm"or  condition =="thunderstorm" or condition =="thunderstorms":
-            datas = []
-            for city in output:
-                api_city = city[1]
-                data = thunderstorms(api_city)
-                if data:
-                     datas.append(data)
-            return jsonify({"location": datas})
-        elif condition =="Clouds" or condition =="clouds" or condition == "cloudy" or condition =="Cloudy":
-            datas = []
-            for city in output:
-                api_city = city[1]
-                data = cloud(api_city)
-                if data:
-                    datas.append(data)
-            return jsonify({"location":datas})
 
-        elif condition == "Rain" or condition =="rain":
-            datas = []
-            for city in output:
-                api_city = city[1]
-                data = raining(api_city)
-                if data:
-                    datas.append(data)
-            return jsonify({"location":datas})
+def weather_list_check(search_param):
+  weather_condition_list = ["Thunderstorm","Clouds","Rain","Clear","Snow","Drizzle","Atmosphere"]
+  for weather_condition in weather_condition_list:
+      if search(search_param.lower(), weather_condition.lower()):
+            return weather_condition
+  return ""
 
-        elif condition =="Clear" or condition =="clear":
-            datas= []
-            for city in output:
-                api_city = city[1]
-                data = clearSky(api_city)
-                if data:
-                    datas.append(data)
-            return jsonify({"location":datas})
 
-        elif condition =="Snow" or condition =="snow":
-            datas= []
-            for city in output:
-                api_city = city[1]
-                data = snow(api_city)
-                if data:
-                    datas.append(data)
-            return jsonify({"location":datas})
 
-        else:
-            return jsonify({"error": "wrong input data"})
-    
+
+
+@app.route('/api/<condition>/<num>/', methods = ['GET'])
+def get_weather_data(condition, num =2):
+    weather_data = []
+    cities = Location.get_location_data( int(num) + 10)
+    weather_condition = weather_list_check(condition)
+    for city in cities:
+            city_name = city[1]
+            api_data = get_open_weather(city_name,weather_condition)
+            if api_data:
+                print(api_data)
+                weather_data.append(api_data)
+    return jsonify({"data":weather_data})
+
 
 
 

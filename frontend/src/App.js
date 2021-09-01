@@ -128,15 +128,7 @@ const App = () => {
         </div>
       )}
 
-      {cities.length > 0 && (
-        <button>
-          {' '}
-          <button type="button" onClick={(e) => getWeather()}>
-            more data
-          </button>{' '}
-        </button>
-      )}
-
+     
       {noCitiesFound && cities.length == 0 && (
         <p>
           {' '}

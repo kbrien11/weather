@@ -21,7 +21,7 @@ class Location:
     def get_location_data(cls):
         with sqlite3.connect(cls.dbpath) as conn:
             cursor = conn.cursor()
-            SQL = """SELECT * FROM location LIMIT 50"""
+            SQL = """SELECT * FROM location LIMIT 0,{}""".format(num)
             cursor.execute(SQL,)
             results = cursor.fetchall()
             return results

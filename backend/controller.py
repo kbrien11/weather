@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-
+# helper function  to see if the weather condition coming from the frontend/user matches the correct weather condition from the API
 def weather_list_check(search_param):
   weather_condition_list = ["Thunderstorm","Clouds","Rain","Clear","Snow","Drizzle","Atmosphere"]
   for weather_condition in weather_condition_list:

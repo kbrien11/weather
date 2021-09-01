@@ -16,12 +16,12 @@ class Location:
 
 
 
-# limiting data pull to 30 as pulling all the locations at once would be a very slow pull
+# limiting data pull to 60 as pulling all the locations at once would be a very slow pull
     @classmethod
     def get_location_data(cls):
         with sqlite3.connect(cls.dbpath) as conn:
             cursor = conn.cursor()
-            SQL = """SELECT * FROM location LIMIT 30"""
+            SQL = """SELECT * FROM location LIMIT 60"""
             cursor.execute(SQL,)
             results = cursor.fetchall()
             return results

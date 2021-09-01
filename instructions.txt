@@ -16,7 +16,7 @@ to start each folder: backend and frontend:
 
 
 backend
-1) cd into backend folder"
+1) cd into backend folder
 2) pip install -r requirements.txt -- requirements should be there though
 3) python controller.py -- This should start the Flask app
 

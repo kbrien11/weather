@@ -11,9 +11,9 @@ def get_open_weather(city,condition):
     city_name = res['name']
     wind = res['wind']['speed']
     temp = round(res['main']['temp'])
-    description = res['weather'][0]['main']
+    weather_type = res['weather'][0]['main']
     about = res['weather'][0]['description']
-    if condition == description:
+    if condition == weather_type:
       weather_data.append(city_name)
       weather_data.append(str(wind) + " " + "MPH")
       weather_data.append(str(temp) + " " + "F")

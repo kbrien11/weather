@@ -1,0 +1,29 @@
+to  activate virtual env:
+
+Windows:
+1) cd backend
+2) cd env
+3) .\Scripts\activate 
+
+Mac
+1) cd backend
+2) rm -r env
+3) python3 -m venv env
+4) source env/bin/activate
+
+
+
+to start each folder: backend and frontend:
+
+
+backend
+1) cd .. ,  outside of ENV folder, should just be in the "backend folder"
+2) pip install -r requirements.txt
+3) python controller.py -- This should start the Flask app
+
+frontend - new terminal window
+
+1) cd frontend
+2) cd weather
+3) npm install 
+4) npm start

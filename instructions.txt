@@ -1,4 +1,4 @@
-to  activate virtual env:
+to  create/activate virtual env:
 
 Windows:
 1) cd backend

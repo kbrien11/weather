@@ -4,7 +4,7 @@ import sqlite3
 from sqlite3.dbapi2 import Cursor
 
 
-
+# parsing the csv data to add into the SQL DB
 def dump_data(filepath):
     with open(filepath,'r') as input:
         reader = csv.reader(input)
@@ -12,7 +12,6 @@ def dump_data(filepath):
         for data in reader:
             City = data[0]
             State = data[1]
-
             add_data(City,State)
 
 

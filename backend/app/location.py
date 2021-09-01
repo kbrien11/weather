@@ -16,7 +16,7 @@ class Location:
 
 
 
-
+# limiting data pull to 30 as pulling all the locations at once would be a very slow pull
     @classmethod
     def get_location_data(cls):
         with sqlite3.connect(cls.dbpath) as conn:

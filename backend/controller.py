@@ -22,10 +22,10 @@ def weather_list_check(search_param):
 
 
 
-@app.route('/api/<condition>/<num>/', methods = ['GET'])
-def get_weather_data(condition, num =2):
+@app.route('/api/<condition>/', methods = ['GET'])
+def get_weather_data(condition):
     weather_data = []
-    cities = Location.get_location_data( int(num) + 10)
+    cities = Location.get_location_data()
     weather_condition = weather_list_check(condition)
     for city in cities:
             city_name = city[1]

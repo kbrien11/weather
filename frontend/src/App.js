@@ -27,7 +27,7 @@ const App = () => {
         setTimeout(setErrorTimeout, 4000);
       } else {
         const response = await fetch(
-          `http://127.0.0.1:5000/api/${inputWeatherCondition}/${cities.length}`
+          `http://127.0.0.1:5000/api/${inputWeatherCondition}/`
         );
         const res = await response.json();
         console.log(res);

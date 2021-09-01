@@ -1,0 +1,112 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading p {
+  margin: auto;
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 16px;
+  color: #000;
+  font-weight: bold;
+  margin-top: 30px;
+}
+p {
+  margin: auto;
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 13px;
+  color: #000;
+  font-weight: bold;
+}
+
+.spinner {
+  margin-top: 10%;
+  font-size: 30px;
+  text-align: center;
+  margin: auto;
+}
+
+.searchBar input {
+  font-size: 20px;
+  text-align: center;
+  width: 20%;
+  margin-top: 60px;
+  margin-bottom: 30px;
+  border-top: inherit;
+  border-left: inherit;
+  border-right: inherit;
+  border-bottom-style: solid;
+}
+.searchBar {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+.searchBar input:focus {
+  outline-color: rgb(36, 179, 55);
+}
+.searchButton button {
+  background-color: inherit;
+  color: rgb(36, 179, 55);
+  border-top: inherit;
+  border-left: inherit;
+  font-size: 30px;
+  border-right: inherit;
+  border-bottom: inherit;
+}
+.searchButton button :hover {
+  color: rgb(8, 90, 39);
+
+  font-size: 35px;
+}
+
+.home-table {
+  margin: auto;
+  max-width: 750px;
+  max-height: 50vh;
+}
+.table-container {
+  padding-top: 30px;
+  margin-bottom: 30px;
+  margin: auto;
+}
+.home-table h4 {
+  font-size: 12px;
+  padding-bottom: 10px;
+}

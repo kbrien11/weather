@@ -1,21 +1,92 @@
 import React, { useState } from 'react';
 import './App.css';
-import { FaSearch, FaSpinner } from 'react-icons/fa';
+import { FaSearch, FaSpinner, FaSun, FaCloudSunRain, FaCloud } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import Loader from 'react-loader-spinner';
+import CityComponent from './cityComponent'
 
 require('react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css');
 
 const App = () => {
   const [inputWeatherCondition, setInputWeatherCondition] = useState('');
+  const [inputCity, setInputCity] = useState('');
+  const [inputState, setInputState] = useState('');
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState('');
   const [isError, setIsError] = useState(false);
   const [noCitiesFound, setNoCitiesFound] = useState(false);
+  const [inputShowForm, setShowForm] = useState(false);
+  const [inputCityAddedText, setInputCityAddedTest] = useState(false);
+  const [inputCityExistsError, setCityExistError] = useState(false);
 
-  const getWeather = async () => {
+  // const getWeather = async () => {
+  //   try {
+  //     setIsError(false);
+  //     setLoading(true);
+  //     setNoCitiesFound(false);
+  //     setCities([]);
+  //     if (inputWeatherCondition == '') {
+  //       setIsError(true);
+  //       setLoading(false);
+  //       setTimeout(setErrorTimeout, 4000);
+  //     } else {
+  //       const response = await fetch(
+  //         `http://127.0.0.1:5000/api/${inputWeatherCondition}/`
+  //       );
+  //       const res = await response.json();
+  //       console.log(res);
+  //       if (res.data) {
+  //         setCities(res.data);
+  //         setLoading(false);
+  //         setNoCitiesFound(true);
+  //         setTimeout(noCityFoundTimeOut, 6000);
+  //         console.log(res.data);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const showForm =()=> {
+     setShowForm(true)
+  }
+
+  const sendFormData = async() =>{
+    setIsError(false)
+    const endpoint = "http://localhost:8080/cities"
+    const data = {
+      city:inputCity,
+      state:inputState
+    }
+
+    const configs = {
+      method: "POST",
+      mode: "cors",
+      headers: {"Content-Type": "application/json", "Access-Control-Allow-Origin": "*",'Accept': 'application/json'},
+      body: JSON.stringify(data)
+    }
+
+    const response = await fetch(endpoint, configs);
+    console.log(response)
+    const res = response.json
+    if(response.status ===200){
+      console.log(res)
+      setInputCityAddedTest(true)
+      setTimeout(CityAddedTimeOut,5000)
+      setInputState("")
+      setInputCity("")
+    }
+    else{
+      setCityExistError(true)
+    }
+  }
+
+
+
+  const getWeatherFromCity = async () => {
     try {
       setIsError(false);
       setLoading(true);
@@ -27,12 +98,14 @@ const App = () => {
         setTimeout(setErrorTimeout, 4000);
       } else {
         const response = await fetch(
-          `http://127.0.0.1:5000/api/${inputWeatherCondition}/`
+          `http://localhost:8080/${inputWeatherCondition}`
         );
         const res = await response.json();
+        console.log(response)
         console.log(res);
-        if (res.data) {
-          setCities(res.data);
+        if (res) {
+          setCities(res);
+          console.log(res[0])
           setLoading(false);
           setNoCitiesFound(true);
           setTimeout(noCityFoundTimeOut, 6000);
@@ -44,8 +117,44 @@ const App = () => {
     }
   };
 
+  const cityObj = Object.assign({}, cities)
+
+  function round(num) {
+    return Math.ceil(num)
+  }
+
+  function suggestion() {
+    if (cityObj[1] > 65) {
+
+      <p> <FaSun></FaSun></p>
+      return " You should go play outside"
+    }
+    if (cityObj[1] > 50 || cityObj[1] <= 65) {
+      <p> <FaCloud></FaCloud></p>
+      return " You should go play outside but wear a sweater"
+    }
+    else {
+      return "You should stay inside"
+    }
+  }
+
+  console.log(typeof (cityObj[2]))
+
+  const data = cities.map((city) => {
+    return <CityComponent
+
+      data={city}
+    />
+  })
+
+
+
   const noCityFoundTimeOut = () => {
     setNoCitiesFound(false);
+  };
+
+  const CityAddedTimeOut = () => {
+    setInputCityAddedTest(false);
   };
 
   const setErrorTimeout = () => {
@@ -67,12 +176,12 @@ const App = () => {
       sort: true
     },
     {
-      dataField: 1,
+      dataField: 2,
       text: 'Wind',
       sort: true
     },
     {
-      dataField: 2,
+      dataField: 1,
       text: 'Temp',
       sort: true
     },
@@ -88,7 +197,7 @@ const App = () => {
           onChange={(e) => setInputWeatherCondition(e.target.value)}
         />
         <span className="searchButton">
-          <button type="button" onClick={(e) => getWeather()}>
+          <button type="button" onClick={(e) => getWeatherFromCity()}>
             {' '}
             <FaSearch />
           </button>{' '}
@@ -114,7 +223,14 @@ const App = () => {
         <div className="table-container">
           <div className="home-table">
             <h4> Incoming ({inputWeatherCondition}) data in the US</h4>
-            <p>
+
+            <p> city: {cityObj[1]}</p>
+            <p> State: {cityObj[2]}</p>
+            <p> Temp: {round(cityObj[3]) + " " + " " + "F"} <span> <FaCloud></FaCloud></span></p>
+            <p> Wind: {round(cityObj[4]) + " " + "MPH"}</p>
+            <p> Description: {cityObj[5]}</p>
+            <p>{suggestion()}</p>
+            {/* <p>
               <BootstrapTable
                 keyField="Name"
                 data={cities}
@@ -123,12 +239,40 @@ const App = () => {
                 hover
                 pagination={paginationFactory(options)}
               />{' '}
-            </p>
+            </p> */}
+            <button type="button" onClick={(e) => showForm()}>
+              {' '}
+              Show Form
+            </button>{' '}
+            <div>
+              {inputShowForm && (
+                <div>
+                  <input
+                    type="text"
+                    placeholder="City"
+                    onChange={(e) => setInputCity(e.target.value)}
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="State"
+                    onChange={(e) => setInputState(e.target.value)}
+                  />
+                   <button type="button" onClick={(e) => sendFormData()}>
+              {' '}
+              Send Data
+            </button>{' '}
+                {inputCityAddedText &&<p> City and State added Succesfully!!</p>}
+                </div>
+              )}
+
+
+            </div>
           </div>
         </div>
       )}
 
-     
+
       {noCitiesFound && cities.length == 0 && (
         <p>
           {' '}
@@ -137,6 +281,7 @@ const App = () => {
         </p>
       )}
       {isError && <p> Please input a valid weather condition</p>}
+      {inputCityExistsError && <p> City already exstis</p>}
     </div>
   );
 };

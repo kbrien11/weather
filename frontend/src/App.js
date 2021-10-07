@@ -18,8 +18,12 @@ const App = () => {
   const [isError, setIsError] = useState(false);
   const [noCitiesFound, setNoCitiesFound] = useState(false);
   const [inputShowForm, setShowForm] = useState(false);
+  const [inputUpdateForm, setUpdateForm] = useState(false);
   const [inputCityAddedText, setInputCityAddedTest] = useState(false);
+  const[inputCityUpdatedText, setInputCityUpdatedText] = useState(false);
   const [inputCityExistsError, setCityExistError] = useState(false);
+  const [inputCityDeletedText, setCityDeletedText] = useState(false);
+  const [token, setToken] = useState(false)
 
   // const getWeather = async () => {
   //   try {
@@ -50,39 +54,111 @@ const App = () => {
   //   }
   // };
 
-  const showForm =()=> {
-     setShowForm(true)
+  const deleteCity = async () => {
+    const endpoint = `http://localhost:8080/cities/${token}`
+
+    const data = {
+      id: token
+    }
+
+    const configs = {
+      method: "POST",
+      mode: 'cors',
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "GET, PUT, POST, DELETE,OPTIONS", 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+
+
+    }
+
+    const response = await fetch(endpoint, configs);
+    console.log(response)
+    const res = response.text
+    if (response.status === 200) {
+      console.log(res)
+      setCityDeletedText(true)
+      setTimeout(CityDeletedTimeOut, 5000)
+
+    }
+    else {
+      setCityExistError(true)
+    }
   }
 
-  const sendFormData = async() =>{
+
+  const showForm = () => {
+    setShowForm(true)
+  }
+
+  const showUpdateForm = () => {
+    setUpdateForm(true)
+  }
+
+  const sendFormData = async () => {
     setIsError(false)
     const endpoint = "http://localhost:8080/cities"
     const data = {
-      city:inputCity,
-      state:inputState
+      city: inputCity,
+      state: inputState
     }
 
     const configs = {
       method: "POST",
       mode: "cors",
-      headers: {"Content-Type": "application/json", "Access-Control-Allow-Origin": "*",'Accept': 'application/json'},
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", 'Accept': 'application/json' },
       body: JSON.stringify(data)
     }
 
     const response = await fetch(endpoint, configs);
     console.log(response)
     const res = response.json
-    if(response.status ===200){
+    if (response.status === 200) {
       console.log(res)
       setInputCityAddedTest(true)
-      setTimeout(CityAddedTimeOut,5000)
+      setTimeout(CityAddedTimeOut, 5000)
       setInputState("")
       setInputCity("")
     }
-    else{
+    else {
       setCityExistError(true)
     }
   }
+
+
+  const sendUpdatedData = async () => {
+    setIsError(false)
+    const endpoint = "http://localhost:8080/cities/update"
+    const data = {
+      id:token,
+      city: inputCity,
+      state: inputState
+    }
+
+    const configs = {
+      method: "PUT",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    }
+
+    const response = await fetch(endpoint, configs);
+    console.log(response)
+    const res = response.json
+    if (response.status === 200) {
+      console.log(res)
+      setInputCityUpdatedText(true)
+      setTimeout(CityUpdatedTimeOut, 5000)
+      setInputState("")
+      setInputCity("")
+    }
+    else {
+      setCityExistError(true)
+    }
+  }
+
+
+  
+console.log(inputCity)
+console.log(inputState)
 
 
 
@@ -101,15 +177,21 @@ const App = () => {
           `http://localhost:8080/${inputWeatherCondition}`
         );
         const res = await response.json();
-        console.log(response)
+        console.log(response[0])
         console.log(res);
-        if (res) {
+        if (res.length > 0) {
           setCities(res);
-          console.log(res[0])
+          setToken(res[0])
+          setInputState(res[2])
+          setInputCity(res[1])
           setLoading(false);
-          setNoCitiesFound(true);
-          setTimeout(noCityFoundTimeOut, 6000);
+
           console.log(res.data);
+        }
+        else {
+          setNoCitiesFound(true)
+          setLoading(false)
+          setTimeout(noCityFoundTimeOut, 6000);
         }
       }
     } catch (error) {
@@ -118,7 +200,7 @@ const App = () => {
   };
 
   const cityObj = Object.assign({}, cities)
-
+  console.log(token)
   function round(num) {
     return Math.ceil(num)
   }
@@ -153,8 +235,16 @@ const App = () => {
     setNoCitiesFound(false);
   };
 
+  const CityUpdatedTimeOut = () => {
+    setInputCityUpdatedText(false);
+  };
+
   const CityAddedTimeOut = () => {
     setInputCityAddedTest(false);
+  };
+
+  const CityDeletedTimeOut = () => {
+    setCityDeletedText(false);
   };
 
   const setErrorTimeout = () => {
@@ -224,12 +314,16 @@ const App = () => {
           <div className="home-table">
             <h4> Incoming ({inputWeatherCondition}) data in the US</h4>
 
-            <p> city: {cityObj[1]}</p>
+            <p> city: {cityObj[1]} </p>
             <p> State: {cityObj[2]}</p>
             <p> Temp: {round(cityObj[3]) + " " + " " + "F"} <span> <FaCloud></FaCloud></span></p>
             <p> Wind: {round(cityObj[4]) + " " + "MPH"}</p>
             <p> Description: {cityObj[5]}</p>
             <p>{suggestion()}</p>
+
+            <p> If you would like to delete the {inputWeatherCondition} from the DB, please click here <span> <button type="button" onClick={(e) => deleteCity()}>
+              {' '}
+              Delete City </button> </span> </p>
             {/* <p>
               <BootstrapTable
                 keyField="Name"
@@ -242,7 +336,12 @@ const App = () => {
             </p> */}
             <button type="button" onClick={(e) => showForm()}>
               {' '}
-              Show Form
+              Add New City
+            </button>{' '}
+
+            <button type="button" onClick={(e) => showUpdateForm()}>
+              {' '}
+              Update {inputWeatherCondition}
             </button>{' '}
             <div>
               {inputShowForm && (
@@ -258,12 +357,43 @@ const App = () => {
                     placeholder="State"
                     onChange={(e) => setInputState(e.target.value)}
                   />
-                   <button type="button" onClick={(e) => sendFormData()}>
-              {' '}
-              Send Data
-            </button>{' '}
-                {inputCityAddedText &&<p> City and State added Succesfully!!</p>}
+                  <button type="button" onClick={(e) => sendFormData()}>
+                    {' '}
+                    Send Data
+                  </button>{' '}
+                  {inputCityAddedText && <p> City and State added Succesfully!!</p>}
                 </div>
+              )}
+
+
+            </div>
+
+
+            <div>
+              {inputUpdateForm && (
+                <div>
+
+                  <input
+                    type="text"
+                    placeholder={ cityObj[1]}
+                    onChange={(e) => setInputCity(e.target.value)}
+                  />
+
+                  <input
+                    type="text"
+                    placeholder={ cityObj[2]}
+                    onChange={(e) => setInputState(e.target.value)}
+                  />
+                  <button type="button" onClick={(e) => sendUpdatedData()}>
+                    {' '}
+                    Udpdate {inputWeatherCondition}
+                  </button>{' '}
+                  {inputCityUpdatedText && <p> {inputWeatherCondition} has been updated!!</p>}
+
+
+                </div>
+
+
               )}
 
 
@@ -276,12 +406,13 @@ const App = () => {
       {noCitiesFound && cities.length == 0 && (
         <p>
           {' '}
-          There is no city in the US currently experiencing{' '}
-          {inputWeatherCondition} at this moment{' '}
+
+          {inputWeatherCondition} doesn't exist in the DB yet{' '}
         </p>
       )}
-      {isError && <p> Please input a valid weather condition</p>}
+      {isError && <p> Please input a valid city</p>}
       {inputCityExistsError && <p> City already exstis</p>}
+      {inputCityDeletedText && <p> {inputWeatherCondition} deleted from DB</p>}
     </div>
   );
 };

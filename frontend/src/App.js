@@ -213,6 +213,7 @@ console.log(favoriteCities)
           setShowFavoriteCities(false)
           setCities(res);
           setToken(res[0])
+          setFavorite(res[3])
           setInputState(res[2])
           setInputCity(res[1])
           setLoading(false);

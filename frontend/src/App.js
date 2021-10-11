@@ -12,6 +12,7 @@ require('react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.
 const App = () => {
   const [inputWeatherCondition, setInputWeatherCondition] = useState('');
   const [inputCity, setInputCity] = useState('');
+  const [inputFavorite, setFavorite] = useState('');
   const [inputState, setInputState] = useState('');
   const [cities, setCities] = useState([]);
   const [favoriteCities, setFavoriteCities] = useState([]);
@@ -138,7 +139,8 @@ const App = () => {
     const data = {
       id:token,
       city: inputCity,
-      state: inputState
+      state: inputState,
+      favorite:inputFavorite
     }
 
     const configs = {

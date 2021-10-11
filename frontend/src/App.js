@@ -157,8 +157,7 @@ const App = () => {
       console.log(res)
       setInputCityUpdatedText(true)
       setTimeout(CityUpdatedTimeOut, 5000)
-      setInputState("")
-      setInputCity("")
+     
     }
     else {
       setCityExistError(true)

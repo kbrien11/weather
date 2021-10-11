@@ -92,8 +92,6 @@ const App = () => {
       console.log(res)
       setInputCityAddedTest(true)
       setTimeout(CityAddedTimeOut, 5000)
-      setInputState("")
-      setInputCity("")
     }
     else {
       setCityExistError(true)
@@ -124,8 +122,7 @@ const App = () => {
       console.log(res)
       setaddToFavoriteText(true)
       setTimeout(cityaddedToFavoriteTimeOut, 5000)
-      setInputState("")
-      setInputCity("")
+
     }
     else {
       setCityExistError(true)

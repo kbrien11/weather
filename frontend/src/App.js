@@ -258,9 +258,9 @@ console.log(favoriteCities)
 
       name={city[1]}
       state ={city[2]}
-      temp = {city[3]}
-      wind = {city[4]}
-      description ={city[5]}
+      temp = {city[4]}
+      wind = {city[5]}
+      description ={city[6]}
     />
   })
 
@@ -365,9 +365,9 @@ console.log(favoriteCities)
 
             <p> city: {cityObj[1]} </p>
             <p> State: {cityObj[2]}</p>
-            <p> Temp: {round(cityObj[3]) + " " + " " + "F"} <span> <FaCloud></FaCloud></span></p>
-            <p> Wind: {round(cityObj[4]) + " " + "MPH"}</p>
-            <p> Description: {cityObj[5]}</p>
+            <p> Temp: {round(cityObj[4]) + " " + " " + "F"} <span> <FaCloud></FaCloud></span></p>
+            <p> Wind: {round(cityObj[5]) + " " + "MPH"}</p>
+            <p> Description: {cityObj[6]}</p>
             <p>{suggestion()}</p>
 
             <p> If you would like to delete the {inputWeatherCondition} from the DB, please click here <span> <button type="button" onClick={(e) => deleteCity()}>

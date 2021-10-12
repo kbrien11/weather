@@ -287,6 +287,9 @@ console.log(favoriteCities)
     setIsError(false);
   };
 
+
+ const iconApi = ('http://openweathermap.org/img/w/' + inputIcon + '.png')
+
   const options = {
     page: 1,
     sizePerPage: 5,
@@ -348,11 +351,12 @@ console.log(favoriteCities)
         )}
       </div>
 
-      {inputShowFavoriteCities &&  <div className = "favoriteCityData">
+     {inputShowFavoriteCities &&<p> List of favorite cities ({favoriteData.length}) </p> }
+      {inputShowFavoriteCities &&  <div className = "favoriteCityWrapper">
  
-  <p> List of favorite cities ({favoriteData.length}) </p>
-  <hr></hr>
-       { favoriteData} 
+  
+
+    { favoriteData}   
 
 </div> }
       {cities.length > 0 && (
@@ -360,16 +364,15 @@ console.log(favoriteCities)
           <div className="home-table">
             <h4> Incoming ({inputWeatherCondition}) data in the US</h4>
 
-            <p> city: {cityObj[1]} </p>
-            <p> State: {cityObj[2]}</p>
-            <p> Temp: {round(cityObj[4]) + " " + " " + "F"} <span> <FaCloud></FaCloud></span></p>
-            <p> Wind: {round(cityObj[5]) + " " + "MPH"}</p>
+             <h4> {cityObj[1]} <span>({cityObj[2]})</span> </h4>
+          
+            <h2>{round(cityObj[4]) + " " + " " + "F"} </h2>
+            {/* <p> Wind: {round(cityObj[5]) + " " + "MPH"}</p> */}
             <p> Description: {cityObj[6]}</p>
-            <p>{suggestion()}</p>
+            <img src = {iconApi} width = "100" height = 
+                "150"></img>
 
-            <p> If you would like to delete the {inputWeatherCondition} from the DB, please click here <span> <button type="button" onClick={(e) => deleteCity()}>
-              {' '}
-             <FaTrash/> </button> </span> </p>
+           
             {/* <p>
               <BootstrapTable
                 keyField="Name"
@@ -380,20 +383,26 @@ console.log(favoriteCities)
                 pagination={paginationFactory(options)}
               />{' '}
             </p> */}
-            <button type="button" onClick={(e) => showForm()}>
+           <div className = "button-wrapper">
+            <button classname = "home-button" type="button" onClick={(e) => showForm()}>
               {' '}
               Add New City
             </button>{' '}
 
-            <button type="button" onClick={(e) => showUpdateForm()}>
+            <button classname = "home-button" type="button" onClick={(e) => showUpdateForm()}>
               {' '}
               Update {inputWeatherCondition}
             </button>{' '}
 
-            <button type="button" onClick={(e) => addToFavorites()}>
+            <button classname = "home-button" type="button" onClick={(e) => addToFavorites()}>
               {' '}
               Add To Favorites
             </button>{' '}
+            </div>
+            <p> If you would like to delete the {inputWeatherCondition} from the DB, please click here <span> <button type="button" onClick={(e) => deleteCity()}>
+              {' '}
+             <FaTrash/> </button> </span> </p>
+            <div>
             <div>
               {inputShowForm && (
                 <div>

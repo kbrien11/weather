@@ -14,6 +14,9 @@ const App = () => {
   const [inputCity, setInputCity] = useState('');
   const [inputFavorite, setFavorite] = useState('');
   const [inputState, setInputState] = useState('');
+  const [lat,setLatitude] = useState('');
+  const [lon, setLongtide] = useState('');
+  const [inputIcon, setIcon] = useState('');
   const [cities, setCities] = useState([]);
   const [favoriteCities, setFavoriteCities] = useState([]);
   const [loading, setLoading] = useState('');
@@ -30,6 +33,9 @@ const App = () => {
   const [token, setToken] = useState(false)
 
   useEffect(() => {getFavoriteCityData()},[])
+  useEffect(() => {getWeatherFromLonandLat()},[])
+  useEffect(() => {getCityFromLongAndLat()},[])
+  
 
   const deleteCity = async () => {
     const endpoint = `http://localhost:8080/cities/${token}`
@@ -92,6 +98,7 @@ const App = () => {
       console.log(res)
       setInputCityAddedTest(true)
       setTimeout(CityAddedTimeOut, 5000)
+      
     }
     else {
       setCityExistError(true)
@@ -122,12 +129,17 @@ const App = () => {
       console.log(res)
       setaddToFavoriteText(true)
       setTimeout(cityaddedToFavoriteTimeOut, 5000)
-
+      
     }
     else {
       setCityExistError(true)
     }
   }
+
+
+  
+
+
 
 
   const sendUpdatedData = async () => {
@@ -177,6 +189,7 @@ const getFavoriteCityData = async () =>{
     if (res.length>0){
       setShowFavoriteCities(true)
       setFavoriteCities(res)
+     
     }
     else{
       console.log("no foavirte data")
@@ -211,6 +224,7 @@ console.log(favoriteCities)
           setToken(res[0])
           setFavorite(res[3])
           setInputState(res[2])
+          setIcon(res[7])
           setInputCity(res[1])
           setLoading(false);
 
@@ -227,38 +241,113 @@ console.log(favoriteCities)
     }
   };
 
+
+  const getWeatherFromLonandLat = async () => {
+    try {
+        const endpoint = `http://localhost:8080/${inputWeatherCondition}`
+      const configs = {
+        method: "GET",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", 'Accept': 'application/json' },
+  
+      }
+        const response = await fetch(
+          endpoint,configs
+        );
+        console.log(response)
+        const res = await response.json();
+        console.log(response[0])
+        console.log(res);
+        if (res.length > 0) {
+          setShowFavoriteCities(false)
+          setCities(res);
+          setToken(res[0])
+          setFavorite(res[3])
+          setInputState(res[2])
+          setIcon(res[7])
+          setInputCity(res[1])
+          setLoading(false);
+
+          console.log(res.data);
+        }
+        else {
+          setNoCitiesFound(true)
+          setLoading(false)
+          setTimeout(noCityFoundTimeOut, 6000);
+        }
+      }catch (error) {
+        console.log(error);
+      }
+  
+  };
+
+ 
+
+
+console.log(lat)
+console.log(lon)
+  const getCityFromLongAndLat = async (lat,lon) =>{
+    console.log(lat)
+    const configs = {
+      method: "GET"
+     
+    }
+      const endpoint = "http://api.openweathermap.org/data/2.5/weather?lat=40.7371776&lon=-73.9475456&appid=27b3ec19c7d34c1bcca082098b7a60a7";
+     
+
+      
+      const response = await fetch(endpoint,configs)
+        
+    
+      console.log(response)
+
+      const datas = await response.json();
+      if(response.status ===200){
+       
+        console.log(datas['name'])
+        setInputWeatherCondition(datas['name'])
+      }
+          else{
+            console.log( "error grabbing city name")
+          }
+    } 
+  
+
+  const iconApi = ('http://openweathermap.org/img/w/' + inputIcon + '.png')
+
+
+
   const cityObj = Object.assign({}, cities)
   console.log(token)
   function round(num) {
     return Math.ceil(num)
   }
 
-  function suggestion() {
-    if (cityObj[1] > 65) {
+  
 
-      <p> <FaSun></FaSun></p>
-      return " You should go play outside"
-    }
-    if (cityObj[1] > 50 || cityObj[1] <= 65) {
-      <p> <FaCloud></FaCloud></p>
-      return " You should go play outside but wear a sweater"
-    }
-    else {
-      return "You should stay inside"
-    }
-  }
+   
+  (function getlocale () {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      setLatitude(position.coords.latitude)
+      setLongtide(position.coords.longitude)
+      
+    },
+    function (error) {
+        console.log("The Locator was denied. :(")
+    })
+})();
 
-  console.log(typeof (cityObj[2]))
 
+console.log(inputWeatherCondition)
   const favoriteData = favoriteCities.map((city) => {
     return <CityComponent
-
+      id = {city[0]}
       name={city[1]}
       state ={city[2]}
       temp = {city[4]}
       wind = {city[5]}
       description ={city[6]}
-        icon = {city[7]}
+      icon = {city[7]}
     />
   })
 
@@ -287,9 +376,6 @@ console.log(favoriteCities)
   const setErrorTimeout = () => {
     setIsError(false);
   };
-
-
- const iconApi = ('http://openweathermap.org/img/w/' + inputIcon + '.png')
 
   const options = {
     page: 1,
@@ -351,8 +437,7 @@ console.log(favoriteCities)
           ' '
         )}
       </div>
-
-     {inputShowFavoriteCities &&<p> List of favorite cities ({favoriteData.length}) </p> }
+            {inputShowFavoriteCities &&<p> List of favorite cities ({favoriteData.length}) </p> }
       {inputShowFavoriteCities &&  <div className = "favoriteCityWrapper">
  
   
@@ -361,19 +446,20 @@ console.log(favoriteCities)
 
 </div> }
       {cities.length > 0 && (
-        <div className="table-container">
-          <div className="home-table">
-            <h4> Incoming ({inputWeatherCondition}) data in the US</h4>
+        <div className="homeCityWrapper">
+          <div className="favoriteCityCard">
+            {/* <h4> Current {inputWeatherCondition} weather</h4> */}
 
-             <h4> {cityObj[1]} <span>({cityObj[2]})</span> </h4>
+            <h4> {cityObj[1]} <span>({cityObj[2]})</span> </h4>
           
             <h2>{round(cityObj[4]) + " " + " " + "F"} </h2>
             {/* <p> Wind: {round(cityObj[5]) + " " + "MPH"}</p> */}
             <p> Description: {cityObj[6]}</p>
             <img src = {iconApi} width = "100" height = 
                 "150"></img>
-
            
+
+         
             {/* <p>
               <BootstrapTable
                 keyField="Name"
@@ -384,7 +470,8 @@ console.log(favoriteCities)
                 pagination={paginationFactory(options)}
               />{' '}
             </p> */}
-           <div className = "button-wrapper">
+
+            <div className = "button-wrapper">
             <button classname = "home-button" type="button" onClick={(e) => showForm()}>
               {' '}
               Add New City
@@ -403,7 +490,6 @@ console.log(favoriteCities)
             <p> If you would like to delete the {inputWeatherCondition} from the DB, please click here <span> <button type="button" onClick={(e) => deleteCity()}>
               {' '}
              <FaTrash/> </button> </span> </p>
-            <div>
             <div>
               {inputShowForm && (
                 <div>
@@ -445,7 +531,7 @@ console.log(favoriteCities)
                     placeholder={ cityObj[2]}
                     onChange={(e) => setInputState(e.target.value)}
                   />
-                  <button type="button" onClick={(e) => sendUpdatedData()}>
+                  <button classname = "home-button" type="button" onClick={(e) => sendUpdatedData()}>
                     {' '}
                     Udpdate {inputWeatherCondition}
                   </button>{' '}

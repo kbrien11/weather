@@ -258,6 +258,7 @@ console.log(favoriteCities)
       temp = {city[4]}
       wind = {city[5]}
       description ={city[6]}
+        icon = {city[7]}
     />
   })
 

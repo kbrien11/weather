@@ -110,3 +110,96 @@ p {
   font-size: 12px;
   padding-bottom: 10px;
 }
+
+.favoriteCityWrapper{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  background-color: whitesmoke;
+  padding:15px 15px;
+  max-width: 800px;
+  column-gap: 10px;
+  margin-left: 30%;
+}
+.homeCityWrapper{
+  display: grid;
+  grid-template-columns: repeat(3);
+  margin: auto;
+  text-align: center;
+  margin-left: 40%;
+}
+
+.homeCityWrapper button{
+  background-color: whitesmoke;
+  border-radius: 20px;
+  margin-left: 5px;
+  font-size: 12px;
+  max-width: 80px;
+  margin-bottom: 10px;
+  padding: 10px 10px;
+  margin-top: 15px;
+}
+.homeCityWrapper button:hover{
+  background-color: antiquewhite;
+}
+
+
+.favoriteCityCard{
+  min-height: 90px;
+  max-width: 400px;
+  border-radius: 15px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  margin-bottom: 10px;
+ text-align: center;
+  background-color: rgb(105, 149, 230);
+}
+.favoriteCityCard:hover{
+  background-color: rgb(38, 72, 221);
+}
+.favoriteCityWrapper p{
+  margin: auto;
+  text-align: center;
+}
+
+.favoriteCityCard h2{
+  text-align: center;
+  margin-top: 35px;
+  color: whitesmoke;
+}
+.favoriteCityCard p{
+  margin-top: 40px;
+  color: whitesmoke;
+}
+.favoriteCityCard h4{
+  text-align: center;
+  font-size: 18px;
+  color: whitesmoke;
+}
+.favoriteCityCard span{
+  font-size: 12px;
+  color: whitesmoke;
+}
+.favoriteCityCard h5{
+  text-align: center;
+  margin-top: 20px;
+  color: whitesmoke;
+}
+.favoriteCityCard img{
+  text-align: center;
+  font-size: 50px;
+  margin: auto;
+}
+
+.home-button button{
+  background-color: black;
+}
+
+.button-wrapper{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+}
+
+.removed-Fave-City-Text p{
+  color: red;
+  font-weight: bold;
+}

@@ -118,14 +118,15 @@ p {
   padding:15px 15px;
   max-width: 800px;
   column-gap: 10px;
-  margin-left: 30%;
+  row-gap: 10px;
+  margin: auto;
 }
+
 .homeCityWrapper{
   display: grid;
   grid-template-columns: repeat(3);
-  margin: auto;
   text-align: center;
-  margin-left: 40%;
+  margin: auto;
 }
 
 .homeCityWrapper button{
@@ -150,8 +151,9 @@ p {
   padding-top: 25px;
   padding-bottom: 25px;
   margin-bottom: 10px;
- text-align: center;
+  text-align: center;
   background-color: rgb(105, 149, 230);
+  margin: auto;
 }
 .favoriteCityCard:hover{
   background-color: rgb(38, 72, 221);

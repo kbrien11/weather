@@ -33,8 +33,7 @@ const App = () => {
   const [token, setToken] = useState(false)
 
   useEffect(() => {getFavoriteCityData()},[])
-  useEffect(() => {getWeatherFromLonandLat()},[])
-  useEffect(() => {getCityFromLongAndLat()},[])
+  useEffect(() => {getCityFromLongAndLat()},[lat,lon])
   
 
   const deleteCity = async () => {
@@ -189,7 +188,7 @@ const getFavoriteCityData = async () =>{
     if (res.length>0){
       setShowFavoriteCities(true)
       setFavoriteCities(res)
-     
+     setCities([])
     }
     else{
       console.log("no foavirte data")
@@ -242,17 +241,11 @@ console.log(favoriteCities)
   };
 
 
-  const getWeatherFromLonandLat = async () => {
+  const getWeatherFromLonandLat = async (name) => {
     try {
-        const endpoint = `http://localhost:8080/${inputWeatherCondition}`
-      const configs = {
-        method: "GET",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", 'Accept': 'application/json' },
-  
-      }
+        const endpoint = `http://localhost:8080/${name}`
         const response = await fetch(
-          endpoint,configs
+          endpoint
         );
         console.log(response)
         const res = await response.json();
@@ -284,28 +277,29 @@ console.log(favoriteCities)
  
 
 
-console.log(lat)
-console.log(lon)
-  const getCityFromLongAndLat = async (lat,lon) =>{
-    console.log(lat)
+  
+  const getCityFromLongAndLat = async () =>{
+  
     const configs = {
       method: "GET"
      
     }
-      const endpoint = "http://api.openweathermap.org/data/2.5/weather?lat=40.7371776&lon=-73.9475456&appid=27b3ec19c7d34c1bcca082098b7a60a7";
-     
-
+    navigator.geolocation.getCurrentPosition(function (position) {
+      setLatitude(position.coords.latitude)
+      setLongtide(position.coords.longitude)
       
-      const response = await fetch(endpoint,configs)
-        
-    
-      console.log(response)
+  })
 
+  console.log(lat)
+  console.log(lon)
+      const endpoint = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=27b3ec19c7d34c1bcca082098b7a60a7`;
+    
+      const response = await fetch(endpoint,configs)
       const datas = await response.json();
       if(response.status ===200){
        
         console.log(datas['name'])
-        setInputWeatherCondition(datas['name'])
+        getWeatherFromLonandLat(datas['name'])
       }
           else{
             console.log( "error grabbing city name")
@@ -323,19 +317,7 @@ console.log(lon)
     return Math.ceil(num)
   }
 
-  
 
-   
-  (function getlocale () {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      setLatitude(position.coords.latitude)
-      setLongtide(position.coords.longitude)
-      
-    },
-    function (error) {
-        console.log("The Locator was denied. :(")
-    })
-})();
 
 
 console.log(inputWeatherCondition)
@@ -437,6 +419,12 @@ console.log(inputWeatherCondition)
           ' '
         )}
       </div>
+
+      <button classname = "home-button" type="button" onClick={(e) => getFavoriteCityData()}>
+              {' '}
+              Show favorite cities
+            </button>{' '}
+
             {inputShowFavoriteCities &&<p> List of favorite cities ({favoriteData.length}) </p> }
       {inputShowFavoriteCities &&  <div className = "favoriteCityWrapper">
  

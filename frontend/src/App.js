@@ -2,9 +2,9 @@ import React, { useState,useEffect } from 'react';
 import './App.css';
 import { FaSearch, FaSpinner, FaSun, FaCloudSunRain, FaCloud,FaTrash } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Loader from 'react-loader-spinner';
+import GoogleMapReact from 'google-map-react';
 import CityComponent from './cityComponent'
 
 require('react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css');
@@ -19,6 +19,10 @@ const App = () => {
   const [inputIcon, setIcon] = useState('');
   const [cities, setCities] = useState([]);
   const [favoriteCities, setFavoriteCities] = useState([]);
+  const [position, setPosition] = useState({
+    lat: lat, 
+    lng: lon
+});
   const [loading, setLoading] = useState('');
   const [isError, setIsError] = useState(false);
   const [noCitiesFound, setNoCitiesFound] = useState(false);
@@ -274,10 +278,6 @@ console.log(favoriteCities)
   
   };
 
- 
-
-
-  
   const getCityFromLongAndLat = async () =>{
   
     const configs = {
@@ -287,15 +287,18 @@ console.log(favoriteCities)
     navigator.geolocation.getCurrentPosition(function (position) {
       setLatitude(position.coords.latitude)
       setLongtide(position.coords.longitude)
-      
+     
   })
 
-  console.log(lat)
-  console.log(lon)
+    console.log(position)
+
+      console.log(lat)
+      console.log(lon)
       const endpoint = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=27b3ec19c7d34c1bcca082098b7a60a7`;
     
       const response = await fetch(endpoint,configs)
       const datas = await response.json();
+      console.log(datas)
       if(response.status ===200){
        
         console.log(datas['name'])
@@ -309,8 +312,7 @@ console.log(favoriteCities)
 
   const iconApi = ('http://openweathermap.org/img/w/' + inputIcon + '.png')
 
-
-
+ 
   const cityObj = Object.assign({}, cities)
   console.log(token)
   function round(num) {
@@ -333,6 +335,8 @@ console.log(inputWeatherCondition)
     />
   })
 
+
+  const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 
   const noCityFoundTimeOut = () => {
@@ -432,10 +436,18 @@ console.log(inputWeatherCondition)
 
     { favoriteData}   
 
+   
+
 </div> }
+<div className = "gridWrapper">
+<div className = 'googleMapGrid'>
       {cities.length > 0 && (
+
+        <div className = 'gridLoadCity'>
         <div className="homeCityWrapper">
           <div className="favoriteCityCard">
+
+         
             {/* <h4> Current {inputWeatherCondition} weather</h4> */}
 
             <h4> {cityObj[1]} <span>({cityObj[2]})</span> </h4>
@@ -478,6 +490,8 @@ console.log(inputWeatherCondition)
             <p> If you would like to delete the {inputWeatherCondition} from the DB, please click here <span> <button type="button" onClick={(e) => deleteCity()}>
               {' '}
              <FaTrash/> </button> </span> </p>
+
+          
             <div>
               {inputShowForm && (
                 <div>
@@ -535,6 +549,7 @@ console.log(inputWeatherCondition)
             </div>
           </div>
         </div>
+        </div>
       )}
 
             {inputaddToFavoriteText && <p> City added to favorites!!</p>}
@@ -548,7 +563,25 @@ console.log(inputWeatherCondition)
       {isError && <p> Please input a valid city</p>}
       {inputCityExistsError && <p> City already exstis</p>}
       {inputCityDeletedText && <p> {inputWeatherCondition} deleted from DB</p>}
+
+      <div classname = "googleMap" style={{ height: '70vh', width: '100%' }}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key:'AIzaSyA1HIKef045IgF-MDEbH5gQBqAbuLcdxzo' }}
+          zoom = {8}
+          center = {{lat:lat,lng:lon}}
+        >
+          <AnyReactComponent
+            lat={lat}
+            lng={lon}
+            text={inputCity}
+          />
+        </GoogleMapReact>
+      </div>
+      </div>
+      </div>
     </div>
+
+  
   );
 };
 

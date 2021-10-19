@@ -566,7 +566,7 @@ console.log(inputWeatherCondition)
 
       <div classname = "googleMap" style={{ height: '70vh', width: '100%' }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key:'AIzaSyA1HIKef045IgF-MDEbH5gQBqAbuLcdxzo' }}
+          bootstrapURLKeys={{ key:'GOOGLE_API_KEY' }}
           zoom = {8}
           center = {{lat:lat,lng:lon}}
         >

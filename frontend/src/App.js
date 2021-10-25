@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import './App.css';
-import { FaSearch, FaSpinner, FaSun, FaCloudSunRain, FaCloud,FaTrash } from 'react-icons/fa';
+import { FaSearch, FaEdit, FaStar, FaCloudSunRain, FaPlus,FaTrash } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Loader from 'react-loader-spinner';
@@ -73,10 +73,12 @@ const App = () => {
 
   const showForm = () => {
     setShowForm(true)
+    setUpdateForm(false)
   }
 
   const showUpdateForm = () => {
     setUpdateForm(true)
+    setShowForm(false)
   }
 
   const sendFormData = async () => {
@@ -363,33 +365,6 @@ console.log(inputWeatherCondition)
     setIsError(false);
   };
 
-  const options = {
-    page: 1,
-    sizePerPage: 5,
-    nextPageText: '>',
-    prePageText: '<',
-    showTotal: true
-  };
-
-  const columns = [
-    {
-      dataField: 0,
-      text: 'City',
-      sort: true
-    },
-    {
-      dataField: 2,
-      text: 'Wind',
-      sort: true
-    },
-    {
-      dataField: 1,
-      text: 'Temp',
-      sort: true
-    },
-    { dataField: 3, text: 'Description' }
-  ];
-
   return (
     <div>
 
@@ -429,7 +404,7 @@ console.log(inputWeatherCondition)
               Show favorite cities
             </button>{' '}
 
-            {inputShowFavoriteCities &&<p> List of favorite cities ({favoriteData.length}) </p> }
+            {inputShowFavoriteCities &&<p className = "face-city-length"> List of favorite cities ({favoriteData.length}) </p> }
       {inputShowFavoriteCities &&  <div className = "favoriteCityWrapper">
  
   
@@ -439,7 +414,7 @@ console.log(inputWeatherCondition)
    
 
 </div> }
-<div className = "gridWrapper">
+{!inputShowFavoriteCities&&<div className = "gridWrapper">
 <div className = 'googleMapGrid'>
       {cities.length > 0 && (
 
@@ -454,7 +429,7 @@ console.log(inputWeatherCondition)
           
             <h2>{round(cityObj[4]) + " " + " " + "F"} </h2>
             {/* <p> Wind: {round(cityObj[5]) + " " + "MPH"}</p> */}
-            <p> Description: {cityObj[6]}</p>
+            <p> {cityObj[6]}</p>
             <img src = {iconApi} width = "100" height = 
                 "150"></img>
            
@@ -474,34 +449,37 @@ console.log(inputWeatherCondition)
             <div className = "button-wrapper">
             <button classname = "home-button" type="button" onClick={(e) => showForm()}>
               {' '}
-              Add New City
+              <FaPlus className = "fa-plus" fontSize = {25} color = "white" />
             </button>{' '}
 
             <button classname = "home-button" type="button" onClick={(e) => showUpdateForm()}>
               {' '}
-              Update {inputWeatherCondition}
+              <FaEdit className = "fa-edit" fontSize = {25} color = "white"/>
             </button>{' '}
 
             <button classname = "home-button" type="button" onClick={(e) => addToFavorites()}>
-              {' '}
-              Add To Favorites
+             <FaStar className = "fa-star" fontSize = {25} color = "yellow"/>
             </button>{' '}
-            </div>
-            <p> If you would like to delete the {inputWeatherCondition} from the DB, please click here <span> <button type="button" onClick={(e) => deleteCity()}>
+
+            <button  classname = "home-button" type="button" onClick={(e) => deleteCity()}>
               {' '}
-             <FaTrash/> </button> </span> </p>
+             <FaTrash className = "fa-delete" fontSize = {25} color = "white"/> </button>
+            </div>
+           
 
           
-            <div>
+            <div className = "homeFormGrid">
+
+              
               {inputShowForm && (
                 <div>
-                  <input
+                  <input className = "inputCityGrid"
                     type="text"
                     placeholder="City"
                     onChange={(e) => setInputCity(e.target.value)}
                   />
 
-                  <input
+                  <input className = "inputCityGrid"
                     type="text"
                     placeholder="State"
                     onChange={(e) => setInputState(e.target.value)}
@@ -513,22 +491,22 @@ console.log(inputWeatherCondition)
                   {inputCityAddedText && <p> City and State added Succesfully!!</p>}
                 </div>
               )}
-
+              
 
             </div>
 
 
-            <div>
+            <div className = "homeFormGrid">
               {inputUpdateForm && (
                 <div>
 
-                  <input
+                  <input className = "inputCityGrid"
                     type="text"
                     placeholder={ cityObj[1]}
                     onChange={(e) => setInputCity(e.target.value)}
                   />
 
-                  <input
+                  <input className = "inputStateGrid"
                     type="text"
                     placeholder={ cityObj[2]}
                     onChange={(e) => setInputState(e.target.value)}
@@ -547,9 +525,12 @@ console.log(inputWeatherCondition)
 
 
             </div>
+           
           </div>
         </div>
+       
         </div>
+        
       )}
 
             {inputaddToFavoriteText && <p> City added to favorites!!</p>}
@@ -564,11 +545,12 @@ console.log(inputWeatherCondition)
       {inputCityExistsError && <p> City already exstis</p>}
       {inputCityDeletedText && <p> {inputWeatherCondition} deleted from DB</p>}
 
-      <div classname = "googleMap" style={{ height: '70vh', width: '100%' }}>
+     {!inputShowFavoriteCities&& <div classname = "googleMap" style={{ height: '70vh', width: '100%', color:"purple" }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key:'GOOGLE_API_KEY' }}
+          bootstrapURLKeys={{ key:'AIzaSyA1HIKef045IgF-MDEbH5gQBqAbuLcdxzo' }}
           zoom = {8}
           center = {{lat:lat,lng:lon}}
+          hoverDistance= {15}
         >
           <AnyReactComponent
             lat={lat}
@@ -576,10 +558,11 @@ console.log(inputWeatherCondition)
             text={inputCity}
           />
         </GoogleMapReact>
-      </div>
-      </div>
-      </div>
-    </div>
+      </div> }
+      </div> 
+      </div> }
+     
+    </div> 
 
   
   );

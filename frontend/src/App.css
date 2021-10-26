@@ -365,3 +365,31 @@ p {
 .face-city-length p{
   color: black;
 }
+
+.navbar {
+  background-color: rgb(7, 7, 7);
+  padding-bottom: 40px;
+
+  
+}
+
+.navbar a{
+  text-decoration: none;
+  color: white;
+  text-align: center;
+  padding: 10px 7px;
+  margin: auto;
+  display: inline;
+}
+
+.navbar a:hover {
+  border-bottom: 2px solid rgb(218, 215, 215);
+ overflow: hidden;
+ text-decoration: none;
+  color: rgb(0, 217, 255);
+}
+.navbar ul{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
